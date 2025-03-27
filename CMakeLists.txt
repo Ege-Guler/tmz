@@ -19,6 +19,6 @@ if(NOT ftxui_POPULATED)
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/utils ${CMAKE_SOURCE_DIR}/include)
-add_executable(tmz src/main.cpp src/sys_monitor.cpp)
+add_executable(tmz src/main.cpp src/sys_monitor.cpp src/kernel_info.cpp)
 
 target_link_libraries(tmz PRIVATE ftxui::dom ftxui::screen ftxui::component)

@@ -3,6 +3,7 @@
 #include <ftxui/dom/elements.hpp>
 #include "../include/sys_monitor.hpp"
 #include "../utils/circular_buffer.hpp"
+#include "../include/kernel_info.hpp"
 #include <thread>
 #include <chrono>
 
@@ -17,14 +18,22 @@ std::string GetStats(SystemMonitor &monitor) {
            "Memory Usage: " + std::to_string(monitor.GetMemoryUsage()) + "MB";
 }
 
+std::string GetHeader() {
+    return "System Monitor - Kernel Version: " + KernelInfo::GetKernelVersion();
+}
+
 int main() {
+    
     SystemMonitor monitor;
+
     auto screen = ScreenInteractive::Fullscreen();
 
     std::string stats = GetStats(monitor);
+    std::string header = GetHeader();
+
     auto system_stats = Renderer([&] {
         return vbox({
-            text("System Monitor"),
+            text(header),
             separator(),
             text(stats),
         }) | border;
@@ -32,8 +41,12 @@ int main() {
 
     std::thread([&] {
         while (true) {
-            stats = GetStats(monitor); // update cached string
-            screen.PostEvent(Event::Custom); // manual redraw
+
+             // update cached strings
+            stats = GetStats(monitor);
+            
+            // force refresh
+            screen.PostEvent(Event::Custom); 
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
         }
     }).detach();
