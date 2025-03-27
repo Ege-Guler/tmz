@@ -24,6 +24,7 @@ int main() {
     std::string cpu_stats = Formatter::FormatCpu(monitor, cpu_buffer);
     std::string header = Formatter::FormatHeader();
     std::string sys_time = Formatter::FormatSysTime(monitor);
+    std::string load_avg = Formatter::FormatLoadAvg(monitor);
 
 
     auto system_stats = Renderer([&] {
@@ -33,6 +34,8 @@ int main() {
             text(cpu_stats),
             separator(),
             text(sys_time),
+            separator(),
+            text(load_avg),
         }) | border;
     });
 
@@ -42,6 +45,7 @@ int main() {
              // update cached strings
             cpu_stats = Formatter::FormatCpu(monitor, cpu_buffer);
             sys_time = Formatter::FormatSysTime(monitor);
+            load_avg = Formatter::FormatLoadAvg(monitor);
 
             // force refresh
             screen.PostEvent(Event::Custom); 

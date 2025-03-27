@@ -54,3 +54,10 @@ std::string Formatter::FormatIdleTime(SystemMonitor &monitor) {
     ss << "Idle Time: " << idle.hours << "h " << idle.minutes << "m " << idle.seconds << "s ";
     return ss.str();
 }
+
+std::string Formatter::FormatLoadAvg(SystemMonitor &monitor) {
+    std::ostringstream ss;
+    auto loadAvg = monitor.GetLoadAvg();
+    ss << "Load Average: " << loadAvg.one_min << " " << loadAvg.five_min << " " << loadAvg.fifteen_min;
+    return ss.str();
+}

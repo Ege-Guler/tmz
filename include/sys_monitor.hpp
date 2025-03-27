@@ -34,11 +34,17 @@ public:
         unsigned int hours, minutes,seconds;
     };
 
+    struct LoadAvg
+    {
+        float one_min, five_min, fifteen_min;
+    };
+
     float GetCpuUsageBuffered(CircularBuffer<float> &cpu_buffer);
     float GetMemoryUsage();
     float CalculateCpuUsage();
     TimeBreakdown GetUpTime();
     TimeBreakdown GetIdleTime();
+    LoadAvg GetLoadAvg();
     
     
 private:

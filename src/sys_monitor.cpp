@@ -88,3 +88,17 @@ SystemMonitor::TimeBreakdown SystemMonitor::GetIdleTime() {
 
     return time;
 }
+
+
+SystemMonitor::LoadAvg SystemMonitor::GetLoadAvg() {
+    std::ifstream file("/proc/loadavg");
+    std::string line;
+    SystemMonitor::LoadAvg loadavg{};
+
+    if(std::getline(file, line)){
+        std::istringstream ss(line);
+        ss >> loadavg.one_min >> loadavg.five_min >> loadavg.fifteen_min;
+    }
+
+    return loadavg;
+}
