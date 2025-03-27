@@ -22,6 +22,14 @@ std::string GetHeader() {
     return "System Monitor - Kernel Version: " + KernelInfo::GetKernelVersion();
 }
 
+std::string GetSysTimeStr(SystemMonitor &monitor) {
+    auto uptime = monitor.GetUpTime();
+    auto idle = monitor.GetIdleTime();
+
+    return "Uptime: " + std::to_string(uptime.hours) + "h " + std::to_string(uptime.minutes) + "m " + std::to_string(uptime.seconds) + "s\n"
+           "Idle Time: " + std::to_string(idle.hours) + "h " + std::to_string(idle.minutes) + "m " + std::to_string(idle.seconds) + "s";
+}
+
 int main() {
     
     SystemMonitor monitor;
@@ -30,12 +38,15 @@ int main() {
 
     std::string stats = GetStats(monitor);
     std::string header = GetHeader();
+    std::string sys_time = GetSysTimeStr(monitor);
 
     auto system_stats = Renderer([&] {
         return vbox({
             text(header),
             separator(),
             text(stats),
+            separator(),
+            text(sys_time),
         }) | border;
     });
 
@@ -44,7 +55,8 @@ int main() {
 
              // update cached strings
             stats = GetStats(monitor);
-            
+            sys_time = GetSysTimeStr(monitor);
+
             // force refresh
             screen.PostEvent(Event::Custom); 
             std::this_thread::sleep_for(std::chrono::milliseconds(500));

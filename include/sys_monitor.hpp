@@ -17,15 +17,33 @@
 
 class SystemMonitor {
 public:
-    float GetCpuUsageBuffered(CircularBuffer<float> &cpu_buffer);
-    float GetMemoryUsage();
-    float CalculateCpuUsage();
+
+    struct SysTime
+    {
+        double uptime; 
+        double idle;
+    };
+
     struct CpuStats
     {
         unsigned long long user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_nice;
     };
+
+    struct TimeBreakdown
+    {
+        unsigned int hours, minutes,seconds;
+    };
+
+    float GetCpuUsageBuffered(CircularBuffer<float> &cpu_buffer);
+    float GetMemoryUsage();
+    float CalculateCpuUsage();
+    TimeBreakdown GetUpTime();
+    TimeBreakdown GetIdleTime();
+    
+    
 private:
     CpuStats GetCpuStats();
+    SysTime GetSysTime();
     
 };
 

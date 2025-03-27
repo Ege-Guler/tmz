@@ -48,3 +48,43 @@ float SystemMonitor::GetMemoryUsage() {
     sysinfo(&info);
     return (info.totalram - info.freeram) / (1024.0 * 1024.0);
 }
+
+// fetch system uptime and idle time from /proc/uptime
+SystemMonitor::SysTime SystemMonitor::GetSysTime() {
+    std::ifstream file("/proc/uptime");
+    std::string line;
+    SystemMonitor::SysTime systime{};
+
+    if(std::getline(file, line)){
+        std::istringstream ss(line);
+        ss >> systime.uptime >> systime.idle;
+    }
+
+    return systime;
+}
+
+SystemMonitor::TimeBreakdown SystemMonitor::GetUpTime() {
+   
+    SystemMonitor::TimeBreakdown time{};
+    double uptime = GetSysTime().uptime;
+
+    time.hours = uptime / 3600;
+    time.minutes = (uptime - time.hours * 3600) / 60;
+    time.seconds = uptime - time.hours * 3600 - time.minutes * 60;
+
+    return time;
+}
+
+// total idle time for all cpus 
+// needs to be divided by the number of cpus to get the idle average I guess
+SystemMonitor::TimeBreakdown SystemMonitor::GetIdleTime() {
+   
+    SystemMonitor::TimeBreakdown time{};
+    double idle = GetSysTime().idle;
+
+    time.hours = idle / 3600;
+    time.minutes = (idle - time.hours * 3600) / 60;
+    time.seconds = idle - time.hours * 3600 - time.minutes * 60;
+
+    return time;
+}
