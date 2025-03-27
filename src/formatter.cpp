@@ -55,9 +55,23 @@ std::string Formatter::FormatIdleTime(SystemMonitor &monitor) {
     return ss.str();
 }
 
+std::string Formatter::FormatAvgIdleTime(SystemMonitor &monitor) {
+    std::ostringstream ss;
+    auto idle = monitor.GetAvgIdleTime();
+    ss << "Average Idle Time: " << idle.hours << "h " << idle.minutes << "m " << idle.seconds << "s ";
+    return ss.str();
+}
+
+
 std::string Formatter::FormatLoadAvg(SystemMonitor &monitor) {
     std::ostringstream ss;
     auto loadAvg = monitor.GetLoadAvg();
     ss << "Load Average: " << loadAvg.one_min << " " << loadAvg.five_min << " " << loadAvg.fifteen_min;
+    return ss.str();
+}
+
+std::string Formatter::FormatCpuCount(SystemMonitor &monitor) {
+    std::ostringstream ss;
+    ss << "CPU Count: " << monitor.GetCpuCount();
     return ss.str();
 }

@@ -25,6 +25,7 @@ int main() {
     std::string header = Formatter::FormatHeader();
     std::string sys_time = Formatter::FormatSysTime(monitor);
     std::string load_avg = Formatter::FormatLoadAvg(monitor);
+    std::string cpu_count = Formatter::FormatCpuCount(monitor);
 
 
     auto system_stats = Renderer([&] {
@@ -36,6 +37,8 @@ int main() {
             text(sys_time),
             separator(),
             text(load_avg),
+            separator(),
+            text(cpu_count),
         }) | border;
     });
 

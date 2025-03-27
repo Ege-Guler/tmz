@@ -1,5 +1,10 @@
 #include "../include/sys_monitor.hpp"
 
+SystemMonitor::SystemMonitor() {
+    cpu_count = GetCpuCount();
+}
+
+
 // fetch cpu stats from /proc/stat
 SystemMonitor::CpuStats SystemMonitor::GetCpuStats() {
 
@@ -86,9 +91,23 @@ SystemMonitor::TimeBreakdown SystemMonitor::GetIdleTime() {
     time.minutes = (idle - time.hours * 3600) / 60;
     time.seconds = idle - time.hours * 3600 - time.minutes * 60;
 
+    
     return time;
 }
 
+SystemMonitor::TimeBreakdown SystemMonitor::GetAvgIdleTime() {
+    SystemMonitor::TimeBreakdown time{};
+    double idle = GetSysTime().idle;
+
+    idle /= this->cpu_count;
+
+    time.hours = idle / 3600;
+    time.minutes = (idle - time.hours * 3600) / 60;
+    time.seconds = idle - time.hours * 3600 - time.minutes * 60;
+
+    
+    return time;
+}
 
 SystemMonitor::LoadAvg SystemMonitor::GetLoadAvg() {
     std::ifstream file("/proc/loadavg");
@@ -101,4 +120,22 @@ SystemMonitor::LoadAvg SystemMonitor::GetLoadAvg() {
     }
 
     return loadavg;
+}
+
+unsigned int SystemMonitor::CpuCount() {
+    std::ifstream file("/proc/cpuinfo");
+    std::string line;
+    int cpu_count = 0;
+
+    while(std::getline(file, line)){
+        if(line.find("processor") != std::string::npos){
+            ++cpu_count;
+        }
+    }
+
+    return cpu_count;
+}
+
+unsigned int SystemMonitor::GetCpuCount() {
+    return CpuCount();
 }

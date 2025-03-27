@@ -23,7 +23,9 @@ public:
     static std::string FormatKernelVersion();
     static std::string FormatUptime(SystemMonitor &monitor);
     static std::string FormatIdleTime(SystemMonitor &monitor);
+    static std::string FormatAvgIdleTime(SystemMonitor &monitor);
     static std::string FormatLoadAvg(SystemMonitor &monitor);
+    static std::string FormatCpuCount(SystemMonitor &monitor);
 };
 
 

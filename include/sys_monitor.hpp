@@ -39,17 +39,31 @@ public:
         float one_min, five_min, fifteen_min;
     };
 
+    SystemMonitor();
+
     float GetCpuUsageBuffered(CircularBuffer<float> &cpu_buffer);
     float GetMemoryUsage();
-    float CalculateCpuUsage();
+
     TimeBreakdown GetUpTime();
     TimeBreakdown GetIdleTime();
+    TimeBreakdown GetAvgIdleTime();
+
     LoadAvg GetLoadAvg();
-    
+
+    // getters
+    unsigned int GetCpuCount();
     
 private:
+    float CalculateCpuUsage();
     CpuStats GetCpuStats();
     SysTime GetSysTime();
+    unsigned int CpuCount();
+
+
+    // vars
+    unsigned int cpu_count;
+
+    
     
 };
 
