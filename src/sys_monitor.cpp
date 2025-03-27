@@ -1,0 +1,50 @@
+#include "../include/sys_monitor.hpp"
+
+// fetch cpu stats from /proc/stat
+SystemMonitor::CpuStats SystemMonitor::GetCpuStats() {
+
+    std::ifstream file("/proc/stat");
+    std::string line;
+    SystemMonitor::CpuStats stats{};
+
+    if(std::getline(file, line)){
+        std::istringstream ss(line);
+        std::string cpu;
+
+        ss >> cpu >> stats.user >> stats.nice >> stats.system >> stats.idle >> stats.iowait >> stats.irq >> stats.softirq >> stats.steal >> stats.guest >> stats.guest_nice;
+    }
+    
+    return stats;
+}
+
+float SystemMonitor::CalculateCpuUsage() {
+
+    SystemMonitor::CpuStats stats = GetCpuStats();
+    static SystemMonitor::CpuStats prev_stats = stats;
+
+    unsigned long long total = stats.user + stats.nice + stats.system + stats.idle + stats.iowait + stats.irq + stats.softirq + stats.steal + stats.guest + stats.guest_nice;
+    unsigned long long prev_total = prev_stats.user + prev_stats.nice + prev_stats.system + prev_stats.idle + prev_stats.iowait + prev_stats.irq + prev_stats.softirq + prev_stats.steal + prev_stats.guest + prev_stats.guest_nice;
+
+    unsigned long long totald = total - prev_total;
+    unsigned long long idled = stats.idle - prev_stats.idle;
+
+    prev_stats = stats;
+
+    if (totald == 0) return 0.0f;
+    return (totald - idled) * 100.0f / totald;
+
+}
+
+float SystemMonitor::GetCpuUsageBuffered(CircularBuffer<float> &cpu_buffer) {
+
+    cpu_buffer.push(CalculateCpuUsage());
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    return cpu_buffer.getAverage();
+
+}
+
+float SystemMonitor::GetMemoryUsage() {
+    struct sysinfo info;
+    sysinfo(&info);
+    return (info.totalram - info.freeram) / (1024.0 * 1024.0);
+}
