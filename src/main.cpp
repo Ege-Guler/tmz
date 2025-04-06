@@ -31,6 +31,8 @@ int main() {
     std::string load_avg = Formatter::FormatLoadAvg(monitor);
     std::string cpu_count = Formatter::FormatCpuCount(monitor);
     std::string processes_pid = Formatter::FormatProcessesPID(process_monitor);
+    std::string processes = Formatter::FormatProcesses(process_monitor, 2);
+
 
     auto system_stats = Renderer([&] {
         return vbox({
@@ -44,7 +46,7 @@ int main() {
             separator(),
             text(cpu_count),
             separator(),
-            paragraph(processes_pid),
+            paragraph(processes),
         }) | border;
     });
 
@@ -55,7 +57,8 @@ int main() {
             cpu_stats = Formatter::FormatCpu(monitor, cpu_buffer);
             sys_time = Formatter::FormatSysTime(monitor);
             load_avg = Formatter::FormatLoadAvg(monitor);
-            processes_pid = Formatter::FormatProcessesPID(process_monitor);
+            //processes_pid = Formatter::FormatProcessesPID(process_monitor);
+            processes = Formatter::FormatProcesses(process_monitor, 2);
 
             // force refresh
             screen.PostEvent(Event::Custom); 

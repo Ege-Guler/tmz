@@ -89,3 +89,40 @@ std::string Formatter::FormatProcessesPID(ProcessMonitor &process_monitor) {
     
     return ss.str();
 }
+
+std::string Formatter::FormatProcesses(ProcessMonitor &process_monitor, int max_processes) {
+
+    std::ostringstream ss;
+    std::vector<ProcessMonitor::process> processes = process_monitor.GetProcesses();
+    
+    ss << "Processes: " << std::endl;
+
+    int index = 0;
+
+    for (const auto &proc : processes) {
+        if(index++ >= max_processes) {
+            break;
+        }
+
+        ss << "PID: " << proc.pid << ", Comm: " << proc.comm << ", State: " << proc.state << ", PPID: " << proc.ppid
+           << ", UTime: " << proc.utime << ", STime: " << proc.stime << ", CTime: " << proc.cutime
+           << ", Threads: " << proc.num_threads << ", VSize: " << proc.vsize
+           << ", RSS: " << proc.rss / 1024.0f
+           << ", Processor: " << proc.processor;
+
+
+        // quick debugging, replace this with proper group and user name 
+        // using /etc/passwd /etc/group
+        ss << ", User: ";
+        for(const auto &user : proc.user) {
+            ss << user << " ";
+        }
+        ss << ", Group: ";
+        for(const auto &group : proc.group) {
+            ss << group << " ";
+        }
+        ss << std::endl;
+    }
+    
+    return ss.str();
+}

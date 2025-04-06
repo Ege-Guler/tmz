@@ -27,6 +27,7 @@ public:
     static std::string FormatLoadAvg(SystemMonitor &monitor);
     static std::string FormatCpuCount(SystemMonitor &monitor);
     static std::string FormatProcessesPID(ProcessMonitor &process_monitor);
+    static std::string FormatProcesses(ProcessMonitor &process_monitor, int max_processes = 10);
 };
 
 
