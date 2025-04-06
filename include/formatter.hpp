@@ -7,7 +7,7 @@
 
 #include "../include/sys_monitor.hpp"
 #include "../include/kernel_info.hpp"
-
+#include "../include/process_monitor.hpp"
 
 // fp precision
 #define PRECISION 2
@@ -26,6 +26,7 @@ public:
     static std::string FormatAvgIdleTime(SystemMonitor &monitor);
     static std::string FormatLoadAvg(SystemMonitor &monitor);
     static std::string FormatCpuCount(SystemMonitor &monitor);
+    static std::string FormatProcessesPID(ProcessMonitor &process_monitor);
 };
 
 

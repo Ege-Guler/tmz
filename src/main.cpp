@@ -9,6 +9,8 @@
 #include "../utils/circular_buffer.hpp"
 #include "../include/kernel_info.hpp"
 #include "../include/formatter.hpp"
+#include "../include/process_monitor.hpp"
+
 
 using namespace ftxui;
 
@@ -18,6 +20,8 @@ CircularBuffer<float> cpu_buffer(8);
 int main() {
     
     SystemMonitor monitor;
+    ProcessMonitor process_monitor;
+    
 
     auto screen = ScreenInteractive::Fullscreen();
 
@@ -26,7 +30,7 @@ int main() {
     std::string sys_time = Formatter::FormatSysTime(monitor);
     std::string load_avg = Formatter::FormatLoadAvg(monitor);
     std::string cpu_count = Formatter::FormatCpuCount(monitor);
-
+    std::string processes_pid = Formatter::FormatProcessesPID(process_monitor);
 
     auto system_stats = Renderer([&] {
         return vbox({
@@ -39,6 +43,8 @@ int main() {
             text(load_avg),
             separator(),
             text(cpu_count),
+            separator(),
+            paragraph(processes_pid),
         }) | border;
     });
 
@@ -49,6 +55,7 @@ int main() {
             cpu_stats = Formatter::FormatCpu(monitor, cpu_buffer);
             sys_time = Formatter::FormatSysTime(monitor);
             load_avg = Formatter::FormatLoadAvg(monitor);
+            processes_pid = Formatter::FormatProcessesPID(process_monitor);
 
             // force refresh
             screen.PostEvent(Event::Custom); 

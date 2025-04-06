@@ -75,3 +75,17 @@ std::string Formatter::FormatCpuCount(SystemMonitor &monitor) {
     ss << "CPU Count: " << monitor.GetCpuCount();
     return ss.str();
 }
+
+std::string Formatter::FormatProcessesPID(ProcessMonitor &process_monitor) {
+    std::ostringstream ss;
+    std::vector<int> pids = process_monitor.GetProcessesPID();
+    ss << "Processes PIDs: ";
+
+    //!TODO correct the formatting later
+    for (const int &pid : pids) {
+        ss << pid << " ";
+    }
+    ss << std::endl;
+    
+    return ss.str();
+}
